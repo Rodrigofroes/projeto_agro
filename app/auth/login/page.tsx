@@ -100,6 +100,8 @@ export default function Login() {
                     showErrorToast("Erro ao enviar email");
                     setIsLoading(false);
                 }
+            } else {
+                setIsLoading(false);
             }
         } catch (e) {
             showErrorToast("Erro ao enviar email");

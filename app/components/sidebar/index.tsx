@@ -35,13 +35,19 @@ export default function Sidebar() {
                 <nav className="mt-2">
                     <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <li className="nav-header">INICIO</li>
-                        <li className="nav-item menu-open">
+                        <li className="nav-item">
                             <Link href="/admin" className="nav-link">
                                 <i className="fa fa-home nav-icon"></i>
                                 <p>Home</p>
                             </Link>
                         </li>
                         <li className="nav-item">
+                            <Link href="/admin" className="nav-link">
+                                <i className="nav-icon fas fa-tachometer-alt"></i>
+                                <p>Dashboard</p>
+                            </Link>
+                        </li>
+                        {/* <li className="nav-item">
                             <a className="nav-link">
                                 <i className="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
@@ -69,7 +75,7 @@ export default function Sidebar() {
                                     </Link>
                                 </li>
                             </ul>
-                        </li>
+                        </li> */}
                         <li className="nav-header">CADASTRO</li>
                         <li className="nav-item">
                             <Link href="/admin/cadastro/talhao" className="nav-link">

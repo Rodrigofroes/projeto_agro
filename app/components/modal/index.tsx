@@ -1,43 +1,32 @@
-"use client";
-import React, { useState } from 'react';
+import React, { ReactNode } from 'react';
 
-export default function Modal() {
-    const [show, setShow] = useState(false);
+interface ModalProps {
+    title: string;
+    isOpen: boolean;
+    onClose: () => void;
+    children?: ReactNode;
+    criar: () => void;
+}
 
-    const handleOpen = () => setShow(true);
-    const handleClose = () => setShow(false);
-
+export default function Modal({ title, isOpen, onClose, children, criar }: ModalProps) {
     return (
         <>
-            {/* Botão para abrir o modal */}
-            <button type="button" className="btn btn-primary" onClick={handleOpen}>
-                Launch demo modal
-            </button>
-
-            {/* Modal */}
-            {show && (
-                <div className={`modal fade `} tabIndex={-1} role="dialog" style={{ display: 'block' }}>
-                    <div className="modal-dialog" role="document">
+            {isOpen && (
+                <div className={`modal fade ${isOpen ? 'show' : ''}`} tabIndex={-1} role="dialog" style={{ display: 'block' }}>
+                    <div className="modal-dialog large" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title">Modal title</h5>
-                                <button
-                                    type="button"
-                                    className="btn-close"
-                                    aria-label="Close"
-                                    onClick={handleClose}
-                                >
-                                </button>
+                                <h5 className="modal-title">{title}</h5>
                             </div>
                             <div className="modal-body">
-                                <p>Este é o conteúdo do modal.</p>
+                                {children}
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" onClick={handleClose}>
-                                    Close
+                                <button type="button" className="btn btn-secondary" onClick={onClose}>
+                                    Fechar
                                 </button>
-                                <button type="button" className="btn btn-primary">
-                                    Save changes
+                                <button type="button" className="btn btn-primary" onClick={criar}>
+                                    Criar
                                 </button>
                             </div>
                         </div>
@@ -46,9 +35,10 @@ export default function Modal() {
             )}
 
             {/* Overlay de fundo para o modal */}
-            {show && (
-                <div className="modal-backdrop fade show" onClick={handleClose}></div>
+            {isOpen && (
+                <div className="modal-backdrop fade show" onClick={onClose}></div>
             )}
         </>
     );
 }
+
