@@ -1,4 +1,4 @@
-"use client";
+
 export default function Footer() {
     let data = new Date();
     return (

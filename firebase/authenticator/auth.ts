@@ -8,7 +8,7 @@ const db = getFirestore(app);
 const login = async (email: string, password: string) => {
     try {
         const data = await signInWithEmailAndPassword(auth, email, password);
-        const user = data.user;
+        const user = data.user.getIdToken();
         return user;
     } catch (e) {
         console.log(e);
@@ -33,16 +33,20 @@ const createAccount = async (nome: string, telefone: string, email: string, pass
 const forgotPassword = async (email: string) => {
     try {
         await sendPasswordResetEmail(auth, email);
+
+        return true;
     } catch (e) {
-        console.log(e);
+        return false;
     }
-}
+};
 
 const logout = async () => {
     try {
         await signOut(auth);
+        return true;
     } catch (e) {
         console.log(e);
+        return false;
     }
 }
 

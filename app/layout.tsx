@@ -18,7 +18,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
         {children}
         <script src="/plugins/jquery/jquery.min.js" />
         <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js" />
-        <script src="/js/adminlte.js" />
+        <script src="/js/adminlte.min.js" />
       </body>
     </html>
   );
