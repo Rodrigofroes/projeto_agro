@@ -18,4 +18,4 @@ COPY . .
 EXPOSE 3000
 
 # Comando para iniciar o servidor Next.js
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]
