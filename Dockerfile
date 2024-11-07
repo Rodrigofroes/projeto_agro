@@ -13,8 +13,7 @@ RUN npm install --legacy-peer-deps
 # Copie o restante do código do projeto para o diretório de trabalho
 COPY . .
 
-# Gere o build do projeto Next.js
-RUN npm run build
+
 
 # Expõe a porta padrão do Next.js
 EXPOSE 3000
