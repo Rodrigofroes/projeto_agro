@@ -6,9 +6,10 @@ interface ModalProps {
     onClose: () => void;
     children?: ReactNode;
     criar: () => void;
+    isLoading?: boolean
 }
 
-export default function Modal({ title, isOpen, onClose, children, criar }: ModalProps) {
+export default function Modal({ title, isOpen, onClose, children, criar, isLoading }: ModalProps) {
     return (
         <>
             {isOpen && (
@@ -26,7 +27,12 @@ export default function Modal({ title, isOpen, onClose, children, criar }: Modal
                                     Fechar
                                 </button>
                                 <button type="button" className="btn btn-primary" onClick={criar}>
-                                    Criar
+                                    {isLoading ? (
+                                        <div className="spinner-border spinner-border-sm" role="status">
+                                        </div>
+                                    ) : (
+                                        'Criar'
+                                    )}
                                 </button>
                             </div>
                         </div>

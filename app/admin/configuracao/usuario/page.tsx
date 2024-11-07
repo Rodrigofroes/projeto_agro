@@ -2,10 +2,14 @@
 import ButtonPrimary from "@/app/components/buttonprimary";
 import Input from "@/app/components/input";
 import Modal from "@/app/components/modal";
+import { showErrorToast, showSuccessToast } from "@/app/components/toasts";
+import UsuarioService from "@/app/service/usuario.service";
 import { useState } from "react";
+import { ToastContainer } from "react-toastify";
 
 export default function Usuario() {
     const [showModal, setShowModal] = useState(false);
+    const [isLoading, setIsloading] = useState(false);
 
     const [nome, setNome] = useState("");
     const [telefone, setTelefone] = useState("");
@@ -56,11 +60,29 @@ export default function Usuario() {
         return Object.keys(novoErro).length === 0;
     }
 
-    function criar() {
-        if (validar()) {
-            console.log("Passou");
+    async function criar() {
+        setIsloading(true);
+        try {
+            if (validar()) {
+                let service = new UsuarioService();
+                let criar = await service.create(email, telefone, email, senha);
+                if (criar) {
+                    showSuccessToast("Usuário criado com sucesso!");
+                    limpar();
+                    setIsloading(false);
+                    setShowModal(false);
+                } else {
+                    showErrorToast("Erro ao criar usuário")
+                    setIsloading(false);
+                }
+            } else {
+                setIsloading(false);
+            }
+        } catch (e) {
+            showErrorToast("Erro ao criar usuário");
+            console.log(e)
         }
-        console.log("Não passou");
+
     }
 
     return (
@@ -71,7 +93,7 @@ export default function Usuario() {
                 </div>
                 <div>
                     <ButtonPrimary name="Cadastrar Usuário" entrar={handleOpenModal} />
-                    <Modal title="Criar usuário" isOpen={showModal} onClose={handleCloseModal} criar={criar}>
+                    <Modal title="Criar usuário" isOpen={showModal} onClose={handleCloseModal} isLoading={isLoading} criar={criar}>
                         <div className="row">
                             <div className="col-md-6">
                                 <Input id="nome" label="Nome Completo:" value={nome} onChange={(e) => setNome(e.target.value)} name="nome" type="text" placeholder="João Silva" />
@@ -108,6 +130,7 @@ export default function Usuario() {
                 </div>
             </div>
             <hr style={{ marginTop: '5px', marginBottom: '5px' }} />
+            <ToastContainer />
         </div>
     );
 }

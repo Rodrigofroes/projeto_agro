@@ -1,7 +1,9 @@
+import UserProvider from "../context";
+
 export default function RootLogin({ children, }: Readonly<{ children: React.ReactNode; }>) {
     return (
-        <div>
+        <UserProvider>
             {children}
-        </div>
+        </UserProvider>
     );
 }

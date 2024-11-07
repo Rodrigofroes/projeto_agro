@@ -43,7 +43,6 @@ export default function Login() {
                 const user = new UsuarioService();
                 const login = await user.login(email, senha);
                 if (login) {
-
                     showSuccessToast("Autenticado com sucesso!");
                     router.push("/admin");
                     limpar();
