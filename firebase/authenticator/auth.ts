@@ -42,45 +42,49 @@ const createAccountSupabase = async (nome: string, telefone: string, email: stri
   }
 }
 
-const login = async (email: string, password: string) => {
-  try {
-    const data = await signInWithEmailAndPassword(auth, email, password);
-    const user = data.user.getIdToken();
-    return user;
-  } catch (e) {
-    console.log(e);
-  }
-};
+// const login = async (email: string, password: string) => {
+//   try {
+//     const data = await signInWithEmailAndPassword(auth, email, password);
+//     const user = data.user.getIdToken();
+//     return user;
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
 
-const createAccount = async (
-  nome: string,
-  telefone: string,
-  email: string,
-  password: string
-) => {
+// const createAccount = async (
+//   nome: string,
+//   telefone: string,
+//   email: string,
+//   password: string
+// ) => {
+//   try {
+//     const create = await createUserWithEmailAndPassword(auth, email, password);
+//     const user = create.user;
+//     await addDoc(collection(db, "tb_usuario"), {
+//       tb_nome: nome,
+//       tb_telefone: telefone,
+//       tb_email: email,
+//       tb_uid: user.uid,
+//     });
+//     if (user) {
+//       return true;
+//     } else {
+//       return false;
+//     }
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
+
+const forgotPasswordSupabase = async (email: string) => {
   try {
-    const create = await createUserWithEmailAndPassword(auth, email, password);
-    const user = create.user;
-    await addDoc(collection(db, "tb_usuario"), {
-      tb_nome: nome,
-      tb_telefone: telefone,
-      tb_email: email,
-      tb_uid: user.uid,
-    });
-    if (user) {
-      return true;
+    let { data, error } = await supabase.auth.resetPasswordForEmail(email)
+    if (error) {
+      console.log(error.message);
     } else {
-      return false;
+      return true;
     }
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-const forgotPassword = async (email: string) => {
-  try {
-    await sendPasswordResetEmail(auth, email);
-
     return true;
   } catch (e) {
     return false;
@@ -101,4 +105,4 @@ const logoutSupabase = async () => {
   }
 };
 
-export { login, createAccount, forgotPassword, logoutSupabase, loginSupabase, createAccountSupabase };
+export { forgotPasswordSupabase, logoutSupabase, loginSupabase, createAccountSupabase };

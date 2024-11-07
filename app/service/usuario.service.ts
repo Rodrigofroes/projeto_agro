@@ -1,8 +1,6 @@
 import { IUsuario } from "./interfaces/usuario.interface";
 import {
-  login,
-  forgotPassword,
-  createAccount,
+  forgotPasswordSupabase,
   loginSupabase,
   createAccountSupabase,
   logoutSupabase,
@@ -45,7 +43,7 @@ export default class UsuarioService implements IUsuario {
 
   async forgotPassword(email: string): Promise<boolean | undefined> {
     try {
-      let senha = await forgotPassword(email);
+      let senha = await forgotPasswordSupabase(email);
       if (senha) {
         return true;
       } else {
