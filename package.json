@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "host": "npx next dev -H 192.168.200.73"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.6.0",

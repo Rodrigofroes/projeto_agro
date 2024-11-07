@@ -33,7 +33,7 @@ export default function Usuario() {
         } else {
             setIsloadingData(false);
         }
-        
+        setProfile(listar);
     };
 
     const fetchCategory = async () => {
@@ -181,7 +181,7 @@ export default function Usuario() {
                     <Select id="data" name="Categoria:" options={category} />
                 </div>
             </div>
-            <div className="container mt-4">
+            <div className="mt-4">
                 {isLoadingData ?
                     <div className="d-flex flex-column align-items-center justify-content-center" style={{ minHeight: "50vh" }}>
                         <div className="spinner-border spinner-border-lg text-primary" role="status"></div>
@@ -197,6 +197,7 @@ export default function Usuario() {
                                             <th scope="col">Nome</th>
                                             <th scope="col">Email</th>
                                             <th scope="col">Telefone</th>
+                                            <th scope="col">Ações</th>
                                         </tr>
                                     </thead>
                                     <tbody>
