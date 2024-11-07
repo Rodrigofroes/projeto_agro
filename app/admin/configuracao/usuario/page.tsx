@@ -2,14 +2,17 @@
 import ButtonPrimary from "@/app/components/buttonprimary";
 import Input from "@/app/components/input";
 import Modal from "@/app/components/modal";
+import Select from "@/app/components/select";
 import { showErrorToast, showSuccessToast } from "@/app/components/toasts";
+import ConfiguracaoService from "@/app/service/configuracao.service";
 import UsuarioService from "@/app/service/usuario.service";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 
 export default function Usuario() {
     const [showModal, setShowModal] = useState(false);
     const [isLoading, setIsloading] = useState(false);
+    const [isLoadingData, setIsloadingData] = useState(false);
 
     const [nome, setNome] = useState("");
     const [telefone, setTelefone] = useState("");
@@ -17,6 +20,38 @@ export default function Usuario() {
     const [senha, setSenha] = useState("");
 
     const [error, setError] = useState({});
+    const [profile, setProfile] = useState([]);
+    const [category, setCategory] = useState([]);
+
+    const fetchData = async () => {
+        setIsloadingData(true);
+        let service = new ConfiguracaoService();
+        let listar = await service.profiles();
+        if (listar) {
+            setProfile(listar);
+            setIsloadingData(false);
+        } else {
+            setIsloadingData(false);
+        }
+        
+    };
+
+    const fetchCategory = async () => {
+        let service = new ConfiguracaoService();
+        let listar = await service.categorias();
+        if (listar) {
+            setCategory(listar);
+            setIsloadingData(false);
+        } else {
+            setIsloadingData(false);
+        }
+        setProfile(listar);
+    }
+
+    useEffect(() => {
+        fetchData();
+        fetchCategory();
+    }, []);
 
     function limpar() {
         setNome("");
@@ -65,12 +100,13 @@ export default function Usuario() {
         try {
             if (validar()) {
                 let service = new UsuarioService();
-                let criar = await service.create(email, telefone, email, senha);
+                let criar = await service.create(nome, telefone, email, senha);
                 if (criar) {
                     showSuccessToast("Usuário criado com sucesso!");
                     limpar();
                     setIsloading(false);
                     setShowModal(false);
+                    fetchData();
                 } else {
                     showErrorToast("Erro ao criar usuário")
                     setIsloading(false);
@@ -131,6 +167,57 @@ export default function Usuario() {
             </div>
             <hr style={{ marginTop: '5px', marginBottom: '5px' }} />
             <ToastContainer />
+            <div className="row mt-2">
+                <div className="col-md-3">
+                    <Input id="nome" label="Nome:" placeholder="Nome do Usuário" name="nome" type="text" />
+                </div>
+                <div className="col-md-3">
+                    <Input id="email" label="Email:" placeholder="Email do Usuário" name="email" type="email" />
+                </div>
+                <div className="col-md-3">
+                    <Input id="telefone" label="telefone:" placeholder="Telefone do Usuário" name="telefone" type="tel" />
+                </div>
+                <div className="col-md-3">
+                    <Select id="data" name="Categoria:" options={category} />
+                </div>
+            </div>
+            <div className="container mt-4">
+                {isLoadingData ?
+                    <div className="d-flex flex-column align-items-center justify-content-center" style={{ minHeight: "50vh" }}>
+                        <div className="spinner-border spinner-border-lg text-primary" role="status"></div>
+                        <h4 className="mt-3">Carregando...</h4>
+                    </div>
+                    :
+                    <div className="mt-2">
+                        {
+                            !isLoadingData && profile.length > 0 ?
+                                <table className="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Nome</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Telefone</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {profile.map((item, index) => (
+                                            <tr key={index}>
+                                                <td>{item.pro_nome}</td>
+                                                <td>{item.pro_email}</td>
+                                                <td>{item.pro_telefone}</td>
+                                                <td>
+                                                    <button className="btn btn-danger">Excluir</button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                                :
+                                null
+                        }
+                    </div>
+                }
+            </div>
         </div>
     );
 }

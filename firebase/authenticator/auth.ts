@@ -1,14 +1,4 @@
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  sendPasswordResetEmail,
-  getAuth,
-} from "firebase/auth";
-import { app, supabase } from "../firebase";
-import { addDoc, collection, getFirestore } from "firebase/firestore";
-
-const auth = getAuth(app);
-const db = getFirestore(app);
+import { supabase } from "../firebase";
 
 const loginSupabase = async (email: string, password: string) => {
   try {
@@ -32,9 +22,21 @@ const createAccountSupabase = async (nome: string, telefone: string, email: stri
       email: email,
       password: password,
     });
+
     if (error) {
       console.log(error.message);
     } else {
+      const { user } = data;
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert([
+          {
+            id: user?.id,
+            pro_nome: nome,
+            pro_email: email,
+            pro_telefone: telefone,
+          },
+        ]);
       return data;
     }
   } catch (e) {
