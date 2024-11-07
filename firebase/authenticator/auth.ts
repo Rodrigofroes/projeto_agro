@@ -3,13 +3,44 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   getAuth,
-  signOut,
 } from "firebase/auth";
-import { app } from "../firebase";
+import { app, supabase } from "../firebase";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+const loginSupabase = async (email: string, password: string) => {
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+    if (error) {
+      console.log(error.message);
+    } else {
+      return data.session?.access_token;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+const createAccountSupabase = async (nome: string, telefone: string, email: string, password: string) => {
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
+    if (error) {
+      console.log(error.message);
+    } else {
+      return data;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 const login = async (email: string, password: string) => {
   try {
@@ -56,14 +87,18 @@ const forgotPassword = async (email: string) => {
   }
 };
 
-const logout = async () => {
+const logoutSupabase = async () => {
   try {
-    await signOut(auth);
-    return true;
+    let { error } = await supabase.auth.signOut()
+    if (error) {
+      console.log(error.message);
+    } else {
+      return true;
+    }
   } catch (e) {
     console.log(e);
     return false;
   }
 };
 
-export { login, createAccount, forgotPassword, logout };
+export { login, createAccount, forgotPassword, logoutSupabase, loginSupabase, createAccountSupabase };

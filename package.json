@@ -12,6 +12,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@supabase/supabase-js": "^2.46.1",
     "firebase": "^11.0.1",
     "js-cookie": "^3.0.5",
     "next": "15.0.2",
@@ -26,6 +27,7 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "15.0.2",
+    "supabase": "^1.219.2",
     "typescript": "^5"
   }
 }

@@ -2,15 +2,17 @@ import { IUsuario } from "./interfaces/usuario.interface";
 import {
   login,
   forgotPassword,
-  logout,
   createAccount,
+  loginSupabase,
+  createAccountSupabase,
+  logoutSupabase,
 } from "../../firebase/authenticator/auth";
 import Token from "../token/token";
 
 export default class UsuarioService implements IUsuario {
   async login(email: string, password: string): Promise<boolean | any> {
     try {
-      const data = await login(email, password);
+      const data = await loginSupabase(email, password);
       if (data) {
         const token = new Token();
         token.setToken(data);
@@ -30,7 +32,7 @@ export default class UsuarioService implements IUsuario {
     senha: string
   ): Promise<boolean | any> {
     try {
-      let criar = await createAccount(nome, telefone, email, senha);
+      let criar = await createAccountSupabase(nome, telefone, email, senha);
       if (criar) {
         return true;
       } else {
@@ -56,7 +58,7 @@ export default class UsuarioService implements IUsuario {
 
   async logout(): Promise<void> {
     try {
-      let log = await logout();
+      let log = await logoutSupabase();
       if (log) {
         const token = new Token();
         token.removeToken();
