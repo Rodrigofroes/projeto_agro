@@ -30,7 +30,7 @@ export default class UsuarioService implements IUsuario {
     senha: string
   ): Promise<boolean | any> {
     try {
-      let criar = await createAccountSupabase(nome, telefone, email, senha);
+      const criar = await createAccountSupabase(nome, telefone, email, senha);
       if (criar) {
         return true;
       } else {
@@ -43,7 +43,7 @@ export default class UsuarioService implements IUsuario {
 
   async forgotPassword(email: string): Promise<boolean | undefined> {
     try {
-      let senha = await forgotPasswordSupabase(email);
+      const senha = await forgotPasswordSupabase(email);
       if (senha) {
         return true;
       } else {
@@ -56,7 +56,7 @@ export default class UsuarioService implements IUsuario {
 
   async logout(): Promise<void> {
     try {
-      let log = await logoutSupabase();
+      const log = await logoutSupabase();
       if (log) {
         const token = new Token();
         token.removeToken();

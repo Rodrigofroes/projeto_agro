@@ -25,8 +25,8 @@ export default function Usuario() {
 
     const fetchData = async () => {
         setIsloadingData(true);
-        let service = new ConfiguracaoService();
-        let listar = await service.profiles();
+        const service = new ConfiguracaoService();
+        const listar = await service.profiles();
         if (listar) {
             setProfile(listar);
             setIsloadingData(false);
@@ -37,8 +37,8 @@ export default function Usuario() {
     };
 
     const fetchCategory = async () => {
-        let service = new ConfiguracaoService();
-        let listar = await service.categorias();
+        const service = new ConfiguracaoService();
+        const listar = await service.categorias();
         if (listar) {
             setCategory(listar);
             setIsloadingData(false);
@@ -99,8 +99,8 @@ export default function Usuario() {
         setIsloading(true);
         try {
             if (validar()) {
-                let service = new UsuarioService();
-                let criar = await service.create(nome, telefone, email, senha);
+                const service = new UsuarioService();
+                const criar = await service.create(nome, telefone, email, senha);
                 if (criar) {
                     showSuccessToast("Usuário criado com sucesso!");
                     limpar();

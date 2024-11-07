@@ -1,6 +1,6 @@
 
 export default function Footer() {
-    let data = new Date();
+    const data = new Date();
     return (
         <footer className="main-footer">
             <div className="float-right d-none d-sm-block">

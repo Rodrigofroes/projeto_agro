@@ -81,7 +81,7 @@ const createAccountSupabase = async (nome: string, telefone: string, email: stri
 
 const forgotPasswordSupabase = async (email: string) => {
   try {
-    let { data, error } = await supabase.auth.resetPasswordForEmail(email)
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email)
     if (error) {
       console.log(error.message);
     } else {
@@ -95,7 +95,7 @@ const forgotPasswordSupabase = async (email: string) => {
 
 const logoutSupabase = async () => {
   try {
-    let { error } = await supabase.auth.signOut()
+    const { error } = await supabase.auth.signOut()
     if (error) {
       console.log(error.message);
     } else {

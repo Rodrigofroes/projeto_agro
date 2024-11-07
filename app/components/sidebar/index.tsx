@@ -9,7 +9,7 @@ export default function Sidebar() {
 
     async function logout() {
         try {
-            let user = new UsuarioService();
+            const user = new UsuarioService();
             await user.logout();
             router.push("/auth/login");
         } catch (e) {
