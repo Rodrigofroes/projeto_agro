@@ -9,6 +9,20 @@ import UsuarioService from "@/app/service/usuario.service";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 
+type ErroUsuario = {
+    nome?: string;
+    telefone?: string;
+    email?: string;
+    senha?: string;
+};
+
+type UsuarioProfile = {
+    pro_nome: string;
+    pro_email: string;
+    pro_telefone: string;
+};
+
+
 export default function Usuario() {
     const [showModal, setShowModal] = useState(false);
     const [isLoading, setIsloading] = useState(false);
@@ -19,8 +33,8 @@ export default function Usuario() {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
 
-    const [error, setError] = useState({});
-    const [profile, setProfile] = useState([]);
+    const [error, setError] = useState<ErroUsuario>({});
+    const [profile, setProfile] = useState<UsuarioProfile[]>([]);
     const [category, setCategory] = useState([]);
 
     const fetchData = async () => {
@@ -69,7 +83,7 @@ export default function Usuario() {
     const handleOpenModal = () => setShowModal(true);
 
     function validar() {
-        const novoErro = {};
+        const novoErro: ErroUsuario = {};
         const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
 
         if (!nome) {

@@ -8,16 +8,23 @@ import UsuarioService from "@/app/service/usuario.service";
 import { useRouter } from "next/navigation"
 import { useState } from "react";
 
+type ErroUsuario = {
+    nome?: string;
+    telefone?: string;
+    email?: string;
+    senha?: string;
+};
+
 export default function Login() {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [fogortSenha, setForgotSenha] = useState(false);
-    const [error, setError] = useState({});
+    const [error, setError] = useState<ErroUsuario>({});
 
     function validar() {
-        const novoErro = {};
+        const novoErro: ErroUsuario = {};
         const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
 
         if (!email) {
@@ -64,7 +71,7 @@ export default function Login() {
     }
 
     function validarEmail() {
-        const novoErro = {};
+        const novoErro: ErroUsuario = {};
         const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
 
         if (!email) {
