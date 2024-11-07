@@ -6,7 +6,7 @@ import {
   logoutSupabase,
 } from "../../firebase/authenticator/auth";
 import Token from "../token/token";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export default class UsuarioService implements IUsuario {
   async login(email: string, password: string): Promise<boolean | any> {
     try {

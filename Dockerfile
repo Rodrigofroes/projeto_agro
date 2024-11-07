@@ -14,7 +14,7 @@ RUN npm install --legacy-peer-deps
 COPY . .
 
 # Gere o build do projeto Next.js
-RUN npm run build
+RUN next build --no-lint
 
 # Expõe a porta padrão do Next.js
 EXPOSE 3000

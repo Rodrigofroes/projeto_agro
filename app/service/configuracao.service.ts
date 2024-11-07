@@ -1,6 +1,5 @@
 import { supabase } from "@/firebase/firebase";
 import { IConfiguracao } from "./interfaces/configuracao.interface"
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default class ConfiguracaoService implements IConfiguracao {
     async profiles(): Promise<any> {
         try {
