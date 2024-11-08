@@ -25,7 +25,7 @@ export default function Sidebar() {
                         <i className="fa fa-user"></i>
                     </div>
                     <div className="info">
-                        <span className="d-block text-white">Rodrigo Oliveira</span>
+                        <span className="d-block text-white">Rodrigo</span>
                     </div>
                     <div>
                         <ButtonLink text="Sair" senha={logout} />

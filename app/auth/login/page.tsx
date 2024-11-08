@@ -5,15 +5,9 @@ import Input from "@/app/components/input";
 import ToastNotification from "@/app/components/toasts";
 import { showErrorToast, showSuccessToast } from "@/app/components/toasts";
 import UsuarioService from "@/app/service/usuario.service";
+import { erro } from "@/app/types/type";
 import { useRouter } from "next/navigation"
 import { useState } from "react";
-
-type ErroUsuario = {
-    nome?: string;
-    telefone?: string;
-    email?: string;
-    senha?: string;
-};
 
 export default function Login() {
     const router = useRouter();
@@ -21,10 +15,10 @@ export default function Login() {
     const [senha, setSenha] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [fogortSenha, setForgotSenha] = useState(false);
-    const [error, setError] = useState<ErroUsuario>({});
+    const [error, setError] = useState<erro>({});
 
     function validar() {
-        const novoErro: ErroUsuario = {};
+        const novoErro: erro = {};
         const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
 
         if (!email) {
@@ -71,7 +65,7 @@ export default function Login() {
     }
 
     function validarEmail() {
-        const novoErro: ErroUsuario = {};
+        const novoErro: erro = {};
         const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
 
         if (!email) {

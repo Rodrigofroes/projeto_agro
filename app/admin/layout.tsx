@@ -1,20 +1,27 @@
 "use client";
-import React, { createContext, useContext, useState } from 'react';
 import Footer from "../components/footer";
 import Header from "../components/header";
 import Sidebar from "../components/sidebar";
 import UserProvider from '../context';
+import { useEffect, useState } from 'react';
+import styles from './AdminLayout.module.css';
+export default function AdminLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
+    const [isClient, setIsClient] = useState(false);
 
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
-export default function AdminLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
+    if (!isClient) return null;
+
     return (
         <UserProvider>
             <div className="wrapper">
                 <Header />
                 <Sidebar />
-                <div className="content-wrapper" style={{ padding: '10px' }}>
+                <div className={`content-wrapper ${styles.padding10}`}>
                     <section className="content pt-3">
-                        <div className="container-fluid shadow" style={{ minHeight: "700px", padding: "15px" }}>
+                        <div className={`container-fluid shadow ${styles.minHeight}`}>
                             {children}
                         </div>
                     </section>

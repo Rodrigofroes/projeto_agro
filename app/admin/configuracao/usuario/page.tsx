@@ -6,66 +6,47 @@ import Select from "@/app/components/select";
 import { showErrorToast, showSuccessToast } from "@/app/components/toasts";
 import ConfiguracaoService from "@/app/service/configuracao.service";
 import UsuarioService from "@/app/service/usuario.service";
+import { categoria, erro, usuario } from "@/app/types/type";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
-
-type ErroUsuario = {
-    nome?: string;
-    telefone?: string;
-    email?: string;
-    senha?: string;
-};
-
-type UsuarioProfile = {
-    pro_nome: string;
-    pro_email: string;
-    pro_telefone: string;
-};
 
 
 export default function Usuario() {
     const [showModal, setShowModal] = useState(false);
     const [isLoading, setIsloading] = useState(false);
     const [isLoadingData, setIsloadingData] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
 
+    const [id, setId] = useState("");
     const [nome, setNome] = useState("");
     const [telefone, setTelefone] = useState("");
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
 
-    const [error, setError] = useState<ErroUsuario>({});
-    const [profile, setProfile] = useState<UsuarioProfile[]>([]);
-    const [category, setCategory] = useState([]);
+    const [error, setError] = useState<erro>({});
+    const [profile, setProfile] = useState<usuario[] | null>([]);
+    const [category, setCategory] = useState<categoria[] | null>([]);
 
     const fetchData = async () => {
         setIsloadingData(true);
         const service = new ConfiguracaoService();
         const listar = await service.profiles();
-        if (listar) {
-            setProfile(listar);
-            setIsloadingData(false);
-        } else {
-            setIsloadingData(false);
-        }
-        setProfile(listar);
+        setProfile(listar)
+        setIsloadingData(false);
     };
 
     const fetchCategory = async () => {
         const service = new ConfiguracaoService();
         const listar = await service.categorias();
-        if (listar) {
-            setCategory(listar);
-            setIsloadingData(false);
-        } else {
-            setIsloadingData(false);
-        }
-        setProfile(listar);
-    }
+        console.log(listar);
+        setCategory(listar);
+    };
 
     useEffect(() => {
         fetchData();
-        fetchCategory();
     }, []);
+
+
 
     function limpar() {
         setNome("");
@@ -83,7 +64,7 @@ export default function Usuario() {
     const handleOpenModal = () => setShowModal(true);
 
     function validar() {
-        const novoErro: ErroUsuario = {};
+        const novoErro: erro = {};
         const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
 
         if (!nome) {
@@ -100,8 +81,12 @@ export default function Usuario() {
             novoErro.email = "*Email inválido";
         }
 
-        if (!senha) {
-            novoErro.senha = "*Campo obrigatório";
+        {
+            if (!isEdit) {
+                if (!senha) {
+                    novoErro.senha = "*Campo obrigatório";
+                }
+            }
         }
 
         setError(novoErro);
@@ -135,6 +120,66 @@ export default function Usuario() {
 
     }
 
+    async function deletar(id: string) {
+        const service = new ConfiguracaoService();
+        const Uservice = new UsuarioService();
+
+        const alert = confirm("Deseja realmente deletar esse usuário?");
+
+        if (!alert) {
+            return;
+        }
+
+        const Udeletar = await Uservice.delete(id);
+        if (Udeletar) {
+            const deletar = await service.deleteProfile(id);
+            if (deletar) {
+                showSuccessToast("Usuário deletado com sucesso!");
+                fetchData();
+            } else {
+                showErrorToast("Erro ao deletar usuário")
+            }
+        } else {
+            showErrorToast("Erro ao deletar usuário")
+        }
+    }
+
+    async function buscar(id: string) {
+        const service = new UsuarioService();
+        const buscar = await service.get(id);
+        setId(buscar[0].id);
+        setNome(buscar[0].pro_nome);
+        setEmail(buscar[0].pro_email);
+        setTelefone(buscar[0].pro_telefone);
+        setIsEdit(true);
+        setShowModal(true);
+    }
+
+    async function editar(id: string) {
+        setIsloading(true);
+        try {
+            if (validar()) {
+                const service = new UsuarioService();
+                const editar = await service.edit(id, nome, telefone, email, senha);
+                if (editar) {
+                    showSuccessToast("Usuário editado com sucesso!");
+                    limpar();
+                    setIsloading(false);
+                    setShowModal(false);
+                    fetchData();
+                } else {
+                    showErrorToast("Erro ao editar usuário")
+                    setIsloading(false);
+                }
+            } else {
+                setIsloading(false);
+            }
+        } catch (e) {
+            showErrorToast("Erro ao editar usuário");
+            console.log(e)
+        }
+    }
+
     return (
         <div>
             <div className="d-flex align-items-center justify-content-between" style={{ marginBottom: '0px' }}>
@@ -143,7 +188,13 @@ export default function Usuario() {
                 </div>
                 <div>
                     <ButtonPrimary name="Cadastrar Usuário" entrar={handleOpenModal} />
-                    <Modal title="Criar usuário" isOpen={showModal} onClose={handleCloseModal} isLoading={isLoading} criar={criar}>
+                    <Modal titleEdit="Alterar usuário" title="Criar usuário" isOpen={showModal} isEdit={isEdit} onClose={handleCloseModal} isLoading={isLoading} criar={() => {
+                        if (isEdit) {
+                            editar(id);
+                        } else {
+                            criar();
+                        }
+                    }} >
                         <div className="row">
                             <div className="col-md-6">
                                 <Input id="nome" label="Nome Completo:" value={nome} onChange={(e) => setNome(e.target.value)} name="nome" type="text" placeholder="João Silva" />
@@ -192,7 +243,7 @@ export default function Usuario() {
                     <Input id="telefone" label="telefone:" placeholder="Telefone do Usuário" name="telefone" type="tel" />
                 </div>
                 <div className="col-md-3">
-                    <Select id="data" name="Categoria:" options={category} />
+                    <Select id="data" name="Categoria:" options={category!} />
                 </div>
             </div>
             <div className="mt-4">
@@ -204,9 +255,9 @@ export default function Usuario() {
                     :
                     <div className="mt-2">
                         {
-                            !isLoadingData && profile.length > 0 ?
-                                <table className="table table-hover">
-                                    <thead>
+                            !isLoadingData && profile!.length > 0 ? (
+                                <table className="table table-hover" style={{ width: '100%', textAlign: 'center' }}>
+                                    <thead style={{ textAlign: 'center' }}>
                                         <tr>
                                             <th scope="col">Nome</th>
                                             <th scope="col">Email</th>
@@ -214,21 +265,33 @@ export default function Usuario() {
                                             <th scope="col">Ações</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        {profile.map((item, index) => (
+                                    <tbody style={{ textAlign: 'center' }}>
+                                        {profile!.map((item, index) => (
                                             <tr key={index}>
                                                 <td>{item.pro_nome}</td>
                                                 <td>{item.pro_email}</td>
                                                 <td>{item.pro_telefone}</td>
-                                                <td>
-                                                    <button className="btn btn-danger">Excluir</button>
+                                                <td className="d-flex justify-content-center" style={{ gap: 2 }}>
+                                                    <div>
+                                                        <button className="btn btn-primary" onClick={() => buscar(item.id)}>
+                                                            <i className="fas fa-pen"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div>
+                                                        <button className="btn btn-danger" onClick={() => deletar(item.id)}>
+                                                            <i className="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
-                                :
-                                null
+                            ) : (
+                                <div className="d-flex flex-column align-items-center justify-content-center" style={{ minHeight: "50vh" }}>
+                                    <h4>Nenhum usuário encontrado</h4>
+                                </div>
+                            )
                         }
                     </div>
                 }

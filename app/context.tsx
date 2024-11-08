@@ -1,16 +1,15 @@
-'use client'
-import { createContext, useState } from 'react'
+"use client";
+import { createContext, useEffect, useState } from 'react';
+import { User, UserContextType } from './types/type';
 
-export const UseContext = createContext({});
+export const UseContext = createContext<UserContextType | undefined>(undefined);
 
-export default function UserProvider({ children, }: { children: React.ReactNode }) {
-    const [user, setUser] = useState({});
+export default function UserProvider({ children }: { children: React.ReactNode }) {
+    const [user, setUser] = useState<User | null>(null);
 
     return (
-        <div>
-            <UseContext.Provider value={{ setUser, user }}>
-                {children}
-            </UseContext.Provider>
-        </div>
+        <UseContext.Provider value={{ user, setUser }}>
+            {children}
+        </UseContext.Provider>
     );
 }

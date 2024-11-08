@@ -1,4 +1,4 @@
-import { supabase } from "../firebase";
+import { supabase, supabaseAdmin } from "../firebase";
 
 const loginSupabase = async (email: string, password: string) => {
   try {
@@ -107,4 +107,35 @@ const logoutSupabase = async () => {
   }
 };
 
-export { forgotPasswordSupabase, logoutSupabase, loginSupabase, createAccountSupabase };
+const deleteAccount = async (id: string) => {
+  try {
+    const { error } = await supabaseAdmin.auth.admin.deleteUser(id);
+    if (error) {
+      console.log(error.message);
+      return false;
+    } else {
+      return true;
+    }
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+const EditAccount = async (id: string, email: string, senha: string) => {
+  try {
+    const { data, error } = senha ? await supabaseAdmin.auth.admin.updateUserById(id, { email: email, password: senha }) : await supabaseAdmin.auth.admin.updateUserById(id, { email: email });
+    if (error) {
+      console.log(error.message);
+      return false;
+    } else {
+      return true;
+    }
+
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+export { forgotPasswordSupabase, logoutSupabase, loginSupabase, createAccountSupabase, deleteAccount, EditAccount };

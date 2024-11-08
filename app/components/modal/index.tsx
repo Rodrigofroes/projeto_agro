@@ -2,14 +2,16 @@ import React, { ReactNode } from 'react';
 
 interface ModalProps {
     title: string;
+    titleEdit?: string;
     isOpen: boolean;
     onClose: () => void;
     children?: ReactNode;
     criar: () => void;
     isLoading?: boolean
+    isEdit?: boolean
 }
 
-export default function Modal({ title, isOpen, onClose, children, criar, isLoading }: ModalProps) {
+export default function Modal({ title, isEdit, titleEdit, isOpen, onClose, children, criar, isLoading }: ModalProps) {
     return (
         <>
             {isOpen && (
@@ -17,7 +19,11 @@ export default function Modal({ title, isOpen, onClose, children, criar, isLoadi
                     <div className="modal-dialog large" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title">{title}</h5>
+                                <h5 className="modal-title">
+                                    {
+                                        isEdit ? titleEdit : title
+                                    }
+                                </h5>
                             </div>
                             <div className="modal-body">
                                 {children}
@@ -31,7 +37,9 @@ export default function Modal({ title, isOpen, onClose, children, criar, isLoadi
                                         <div className="spinner-border spinner-border-sm" role="status">
                                         </div>
                                     ) : (
-                                        'Criar'
+
+                                        isEdit ? 'Editar' : 'Criar'
+
                                     )}
                                 </button>
                             </div>
